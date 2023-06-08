@@ -20,7 +20,7 @@ pipeline {
                         sh 'scp -o StrictHostKeyChecking=no ansible/* root@74.220.19.4:/root'
 
                         withCredentials([sshUserPrivateKey(credentialsId: 'server-key', keyFileVariable: 'keyfile', usernameVariable: 'user')]) {
-                            sh "scp ${keyfile} root@74.220.19.4:/root/id_rsa"
+                            sh 'scp $keyfile root@74.220.19.4:/root/id_rsa'
                         }
                     }
                 }
@@ -32,14 +32,13 @@ pipeline {
                     echo "calling ansible playbook to configure server"
                     def remote = [:]
                     remote.name = "ansible-server"
-                    remote.host = env.ANSIBLE_SERVER
-                    remote.allowAnyHost = true
+                    remote.host = "74.220.19.4"
+                    remote.allowAnyHosts = true
 
-                    withCredentials([sshUserPrivateKey(credentialsId: 'server-key', keyFileVariable: 'keyFile', usernameVariable: 'user')]) {
+                    withCredentials([sshUserPrivateKey(credentialsId: 'ansible-server-key', keyFileVariable: 'keyfile', usernameVariable: 'user')]) {
                         remote.user = user
                         remote.identityFile = keyFile
-                        sshScript remote: remote, script: "prepare-server.sh"
-                        sshCommand remote: remote, command: "ansible-playbook deploy-app.yaml"
+                        sshCommand remote: remote, command: "ls -l"
                     }
                 }
             }
