@@ -1,0 +1,51 @@
+---
+- name: Install docker and docker compose
+  hosts: hosts
+  become: yes
+  gather_facts: False
+  tasks:
+    - name: update cache
+      apt:
+        update_cache: true
+    - name: Install docker
+      apt:
+        name: docker
+        state: present
+    - name: Install docker compose
+      get_url: curl -L https://github.com/docker/compose/releases/download/1.24.1/docker-compose-Linux-{{lookup('pipe','uname -m')}}
+      dest: /usr/local/bin/docker-compose
+      mode: +x
+
+- name: Start docker
+  hosts: hosts
+  tasks:
+    - name: start docker
+      systemd: docker
+      state: started
+    - name: reset the connection
+      meta: reset_connection
+
+- name: add user to docker group
+  hosts: hosts
+  tasks:
+    - name: add user to group
+      user: root
+      group: docker
+      append: yes
+
+- name: Start containers
+  hosts: hosts
+  vars_file:
+    - project-vars
+  tasks:
+    - name: copy docker compose file
+      copy:
+        src: docker-compose.yaml
+        dest: /home/root/docker-compose.yaml
+    - name: docker login
+      docker_login:
+        username: akramexp
+        password: "{{docker_password}}"
+    - name: start the container
+      docker_compose:
+        project_src: /home/root
