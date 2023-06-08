@@ -8,16 +8,10 @@ pipeline {
                     remote.name = "ansible-server"
                     remote.host = "74.220.20.100"
                     remote.allowAnyHosts = true
-
-                    node {
-                        withCredentials([sshUserPrivateKey(credentialsId: 'ansible-server-key', keyFileVariable: 'keyfile', usernameVariable: 'user')]) {
-                            remote.user = user
-                            remote.identityFile = keyfile
-
-                            stage("SSH Steps Rocks!") {
-                                sshCommand remote: remote, command: 'ls'
-                            }
-                        }
+                    withCredentials([sshUserPrivateKey(credentialsId: 'ansible-server-key', keyFileVariable: 'keyfile', usernameVariable: 'user')]) {
+                        remote.user = user
+                        remote.identityFile = keyfile
+                        sshCommand remote: remote, command: 'ls'
                     }
                 }
             }
