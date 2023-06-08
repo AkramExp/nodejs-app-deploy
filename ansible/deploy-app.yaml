@@ -21,8 +21,9 @@
   hosts: all
   tasks:
     - name: start docker
-      systemd: docker
-      state: started
+      systemd:
+        name: docker
+        state: started
     - name: reset the connection
       meta: reset_connection
 
