@@ -10,7 +10,7 @@ pipeline {
                     remote.allowAnyHosts = true
 
                     node {
-                        withCredentials([usernamePassword(credentialsId: 'ansible-server-key', keyFileVariable: 'keyfile', usernameVariable: 'user')]) {
+                        withCredentials([sshUserPrivateKey(credentialsId: 'ansible-server-key', keyFileVariable: 'keyfile', usernameVariable: 'user')]) {
                             remote.user = user
                             remote.identityFile = keyfile
 
