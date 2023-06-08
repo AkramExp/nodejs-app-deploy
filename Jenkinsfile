@@ -2,13 +2,17 @@ pipeline {
     agent any
     stages {
         stage("check") {
-            def remote = [:]
-            remote.name = 'ansible-server'
-            remote.host = '74.220.20.100'
-            withCredentials([sshUserPrivateKey(credentialsId: 'ansible-server-key', keyFileVariable: 'keyfiel', usernameVariable: 'user')]) {
-                remote.user = user
-                remote.identityFile = keyfile
-                sshCommand remote: remote, command 'ls -l'
+            steps {
+                script {
+                    def remote = [:]
+                    remote.name = 'ansible-server'
+                    remote.host = '74.220.20.100'
+                    withCredentials([sshUserPrivateKey(credentialsId: 'ansible-server-key', keyFileVariable: 'keyfiel', usernameVariable: 'user')]) {
+                        remote.user = user
+                        remote.identityFile = keyfile
+                        sshCommand remote: remote, command 'ls -l'
+                    }
+                }
             }
         }
         // stage("provision deployment server") {
