@@ -1,6 +1,6 @@
 ---
 - name: Install docker and docker compose
-  hosts: hosts
+  hosts: all
   become: yes
   gather_facts: False
   tasks:
@@ -17,7 +17,7 @@
       mode: +x
 
 - name: Start docker
-  hosts: hosts
+  hosts: all
   tasks:
     - name: start docker
       systemd: docker
@@ -26,7 +26,7 @@
       meta: reset_connection
 
 - name: add user to docker group
-  hosts: hosts
+  hosts: all
   tasks:
     - name: add user to group
       user: root
@@ -34,7 +34,7 @@
       append: yes
 
 - name: Start containers
-  hosts: hosts
+  hosts: all
   vars_file:
     - project-vars
   tasks:
