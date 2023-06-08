@@ -7,7 +7,6 @@ pipeline {
         stage("provision deployment server") {
             steps {
                 script {
-                    sh "cd terraform"
                     sh "terraform init"
                     sh "terraform apply --auto-approve"
                     sh "terraform output server_ip > ansible/hosts"
