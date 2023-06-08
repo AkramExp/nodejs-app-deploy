@@ -38,7 +38,7 @@ pipeline {
                     withCredentials([sshUserPrivateKey(credentialsId: 'ansible-server-key', keyFileVariable: 'keyfile', usernameVariable: 'root')]) {
                         remote.user = root
                         remote.identityFile = keyfile
-                        sshCommand remote: remote, command: 'ls -l'
+                        sshCommand remote: remote, command: "ansible-playbook deploy-app.yaml"
                     }
                 }
             }
