@@ -35,10 +35,10 @@ pipeline {
                     remote.host = "74.220.19.4"
                     remote.allowAnyHosts = true
 
-                    withCredentials([sshUserPrivateKey(credentialsId: 'ansible-server-key', keyFileVariable: 'identity', usernameVariable: 'userName')]) {
-                        remote.user = userName
-                        remote.identityFile = identity
-                        sshCommand remote: remote, command: 'for i in {1..5}; do echo -n \"Loop \$i \"; date ; sleep 1; done'
+                    withCredentials([sshUserPrivateKey(credentialsId: 'ansible-server-key', keyFileVariable: 'keyfile', usernameVariable: 'user')]) {
+                        remote.user = user
+                        remote.identityFile = keyfile
+                        sshCommand remote: remote, command: 'ls -l'
                     }
                 }
             }
