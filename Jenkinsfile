@@ -9,7 +9,7 @@ pipeline {
                     remote.name = 'ansible-server'
                     remote.host = '74.220.20.100'
                     remote.allowAnyHosts = true
-                    withCredentials([sshUserPrivateKey(credentialsId: 'ansible-server-key', keyFileVariable: 'keyfiel', usernameVariable: 'user')]) {
+                    withCredentials([sshUserPrivateKey(credentialsId: 'ansible-server-key', keyFileVariable: 'keyfile', usernameVariable: 'user')]) {
                         remote.user = user
                         remote.identityFile = keyfile
                         sshCommand remote: remote, command 'ls -l'
