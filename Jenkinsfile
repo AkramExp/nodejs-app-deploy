@@ -4,6 +4,7 @@ pipeline {
         stage("check") {
             steps {
                 script {
+                    echo "testing"
                     def remote = [:]
                     remote.name = 'ansible-server'
                     remote.host = '74.220.20.100'
