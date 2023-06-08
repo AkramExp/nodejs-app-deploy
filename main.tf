@@ -34,12 +34,16 @@ data "civo_disk_image" "ubuntu" {
    }
 }
 
+data "civo_ssh_key" "ssh-key" {
+  name = "ssh-key"
+}
+
 resource "civo_instance" "server" {
     hostname = "server"
-    tags = ["python", "nginx"]
     notes = "this is a note for the server"
     size = element(data.civo_instances_size.extra-small.sizes, 0).name
     disk_image = element(data.civo_disk_image.ubuntu.diskimages, 0).id
+    sshkey_id = data.civo_ssh_key.ssh-key.id
 }
 
 output "server_ip" {
