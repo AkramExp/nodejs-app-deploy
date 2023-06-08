@@ -26,22 +26,22 @@ pipeline {
                 }
             }
         }
-        stage("deploy") {
-            steps {
-                script {
-                    echo "calling ansible playbook to configure server"
-                    def remote = [:]
-                    remote.name = "ansible-server"
-                    remote.host = "74.220.19.4"
-                    remote.allowAnyHosts = true
+        // stage("deploy") {
+        //     steps {
+        //         script {
+        //             echo "calling ansible playbook to configure server"
+        //             def remote = [:]
+        //             remote.name = "ansible-server"
+        //             remote.host = "74.220.19.4"
+        //             remote.allowAnyHosts = true
 
-                    withCredentials([sshUserPrivateKey(credentialsId: 'ansible-server-key', keyFileVariable: 'keyfile', usernameVariable: 'user')]) {
-                        remote.user = user
-                        remote.identityFile = keyfile
-                        sshCommand remote: remote, command: "ls -l"
-                    }
-                }
-            }
-        }
+        //             withCredentials([sshUserPrivateKey(credentialsId: 'ansible-server-key', keyFileVariable: 'keyfile', usernameVariable: 'user')]) {
+        //                 remote.user = user
+        //                 remote.identityFile = keyfile
+        //                 sshCommand remote: remote, command: "ls -l"
+        //             }
+        //         }
+        //     }
+        // }
     }
 }
