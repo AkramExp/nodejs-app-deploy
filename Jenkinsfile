@@ -18,6 +18,10 @@ pipeline {
                 script {
                     sshagent(['ansible-server-key']) {
                         sh 'scp -o StrictHostKeyChecking=no ansible/* root@74.220.19.4:/root'
+
+                        withCredentials([sshUserPrivateKey(credentialsId: 'server-key', keyFileVariable: 'keyfile', usernameVariable: 'user')]) {
+                            sh "scp ${keyfile} root@74.220.19.4:/root/id_rsa"
+                        }
                     }
                 }
             }
