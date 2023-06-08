@@ -1,1 +1,1 @@
-civo_token = "LQhOYPsMmBrr6MkG6Kq5YLTU945QO9ANDCEATi1DnaXkV9KY16"
+civo_token = ""

@@ -1,31 +1,38 @@
 pipeline {
     agent any
-    environment {
-        ANSIBLE_SERVER = "74.220.17.252"
-    }
     stages {
-        stage("provision deployment server") {
-            steps {
-                script {
-                    sh "terraform init"
-                    sh "terraform apply --auto-approve"
-                    sh "terraform output server_ip > ansible/hosts"
-                }
+        stage("check") {
+            def remote = [:]
+            remote.name = 'ansible-server'
+            remote.host = '74.220.20.100'
+            withCredentials([sshUserPrivateKey(credentialsId: 'ansible-server-key', keyFileVariable: 'keyfiel', usernameVariable: 'user')]) {
+                remote.user = user
+                remote.identityFile = keyfile
+                sshCommand remote: remote, command 'ls -l'
             }
         }
-        stage("copy files to ansible server") {
-            steps {
-                script {
-                    sshagent(['ansible-server-key']) {
-                        sh 'scp -o StrictHostKeyChecking=no ansible/* root@74.220.17.252:/root'
+        // stage("provision deployment server") {
+        //     steps {
+        //         script {
+        //             sh "terraform init"
+        //             sh "terraform apply --auto-approve"
+        //             sh "terraform output server_ip > ansible/hosts"
+        //         }
+        //     }
+        // }
+        // stage("copy files to ansible server") {
+        //     steps {
+        //         script {
+        //             sshagent(['ansible-server-key']) {
+        //                 sh 'scp -o StrictHostKeyChecking=no ansible/* root@74.220.17.252:/root'
 
-                        withCredentials([sshUserPrivateKey(credentialsId: 'server-key', keyFileVariable: 'keyfile', usernameVariable: 'user')]) {
-                            sh 'scp $keyfile root@74.220.17.252:/root/id_rsa'
-                        }
-                    }
-                }
-            }
-        }
+        //                 withCredentials([sshUserPrivateKey(credentialsId: 'server-key', keyFileVariable: 'keyfile', usernameVariable: 'user')]) {
+        //                     sh 'scp $keyfile root@74.220.17.252:/root/id_rsa'
+        //                 }
+        //             }
+        //         }
+        //     }
+        // }
         // stage("deploy") {
         //     steps {
         //         script {

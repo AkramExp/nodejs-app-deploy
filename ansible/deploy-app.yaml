@@ -1,53 +1,54 @@
 ---
-- name: Install docker and docker compose
+- name: Install Docker and Docker Compose
   hosts: all
   become: yes
-  gather_facts: False
+  gather_facts: false
   tasks:
-    - name: update cache
+    - name: Install Docker
       apt:
-        update_cache: true
-    - name: Install docker
-      apt:
-        name: docker
+        name: docker.io
+        update_cache: yes
         state: present
     - name: Install docker compose
       get_url:
-        url: curl -L https://github.com/docker/compose/releases/download/1.24.1/docker-compose-Linux-{{lookup('pipe','uname -m')}}
+        url: https://github.com/docker/compose/releases/download/1.29.2/docker-compose-Linux-{{lookup('pipe', 'uname -m')}}
         dest: /usr/local/bin/docker-compose
         mode: +x
+    - name: Install pip
+      apt:
+        name: python3-pip
+        state: present
+    - name: Install docker python module
+      pip:
+        name: 
+          - docker
+          - docker-compose
 
-- name: Start docker
+- name: add civo user to docker group
   hosts: all
+  become: yes
   tasks:
-    - name: start docker
-      systemd:
-        name: docker
-        state: started
-    - name: reset the connection
+    - name: add civo user to docker group
+      user:
+        name: civo
+        groups: docker
+        append: yes
+    - name: reconnect to server session
       meta: reset_connection
 
-- name: add user to docker group
+- name: Start docker containers
   hosts: all
   tasks:
-    - name: add user to group
-      user: root
-      group: docker
-      append: yes
-
-- name: Start containers
-  hosts: all
-  vars_file:
-    - project-vars
-  tasks:
-    - name: copy docker compose file
+    - name: copy docker compose file to remote server
       copy:
         src: docker-compose.yaml
-        dest: /home/root/docker-compose.yaml
-    - name: docker login
+        dest: /home/civo/docker-compose.yaml
+    - name: Docker Login
       docker_login:
+        registry_url: https://index.docker.io/v1
         username: akramexp
-        password: "{{docker_password}}"
-    - name: start the container
+        password: shambles123*
+    - name: Start containers from compose
       docker_compose:
-        project_src: /home/root
+        project_src: /home/civo
+        state: present
