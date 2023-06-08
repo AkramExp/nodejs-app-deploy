@@ -1,7 +1,7 @@
 pipeline {
     agent any
     environment {
-        ANSIBLE_SERVER = ansible_ip
+        ANSIBLE_SERVER = 74.220.19.4
     }
     stages {
         stage("provision deployment server") {
@@ -18,7 +18,7 @@ pipeline {
             steps {
                 script {
                     sshagent(['ansible-server-key']) {
-                        sh 'scp -o StrictHostKeyChecking=no ansible/* root@ansible_ip:/root'
+                        sh 'scp -o StrictHostKeyChecking=no ansible/* root@74.220.19.4:/root'
                     }
                 }
             }
@@ -27,7 +27,7 @@ pipeline {
             steps {
                 script {
                     echo "calling ansible playbook to configure server"
-                    def remote[:]
+                    def remote = [:]
                     remote.name = "ansible-server"
                     remote.host = env.ANSIBLE_SERVER
                     remote.allowAnyHost = true
