@@ -50,6 +50,7 @@ resource "civo_instance" "server" {
     disk_image = element(data.civo_disk_image.ubuntu.diskimages, 0).id
     sshkey_id = data.civo_ssh_key.ssh-key.id
     firewall_id = data.civo_firewall.my-instance-firewall.id
+    initial_user = "root"
 }
 
 output "server_ip" {
