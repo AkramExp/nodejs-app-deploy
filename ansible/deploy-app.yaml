@@ -38,6 +38,8 @@
 
 - name: Start docker containers
   hosts: all
+  vars_files:
+    - project-vars
   tasks:
     - name: copy docker compose file to remote server
       copy:
@@ -47,7 +49,7 @@
       docker_login:
         registry_url: https://index.docker.io/v1
         username: akramexp
-        password: shambles123*
+        password: "{{docker_password}}"
     - name: Start containers from compose
       docker_compose:
         project_src: /home/civo
