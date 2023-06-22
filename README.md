@@ -15,3 +15,15 @@ Ansible is used automate the process of making servers ready for deployment and 
 - Ansible integration in Jenkinsfile to install docker on the server and deploy the application.
 I tried to automate most of the things by integrating automation tools in Jenkins CI/CD Pipeline to deploy the application efficiently.
 
+## Installation
+To run without Jenkinsfile in Jenkins pipeline 
+Provision the Infrastructure with Terraform
+```bash
+  terraform init
+  terraform apply --auto-approve
+```
+Run Ansible Playbook
+```bash
+  cd ansible
+  ansible-playbook deploy-app.yaml
+```
