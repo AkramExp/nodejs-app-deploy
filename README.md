@@ -16,7 +16,7 @@ Ansible is used automate the process of making servers ready for deployment and 
 I tried to automate most of the things by integrating automation tools in Jenkins CI/CD Pipeline to deploy the application efficiently.
 
 ## Installation
-To run without Jenkinsfile in Jenkins pipeline 
+To run without Jenkinsfile in Jenkins pipeline you will have to make some changes manually in ansible hosts and ansible.cfg file.
 Provision the Infrastructure with Terraform
 ```bash
   terraform init
