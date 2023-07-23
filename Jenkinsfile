@@ -7,9 +7,14 @@ pipeline {
         stage("provision deployment server") {
             steps {
                 script {
-                    sh "terraform init"
-                    sh "terraform apply --auto-approve"
-                    sh "terraform output server_ip > ansible/hosts"
+                    dir('terraform') {
+                        sh "terraform init"
+                        sh "terraform apply --auto-approve"
+                        ANSIBLE_SERVER_IP = sh(
+                            script: "terraform output server_ip"
+                            returnStdout=true
+                        ).trim()    
+                    }
                 }
             }
         }
@@ -39,7 +44,7 @@ pipeline {
                         remote.user = root
                         remote.identityFile = keyfile
                         sshScript remote: remote, script: "prepare-server.sh"
-                        sshCommand remote: remote, command: "ansible-playbook deploy-app.yaml"
+                        sshCommand remote: remote, command: "ansible-playbook --inventory $ANSIBLE_SERVER_IP, --private-key ~/.ssh/id_rsa --user civo deploy-app.yaml"
                     }
                 }
             }
